@@ -96,8 +96,11 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
 
     private fun loadActions(account: Account, type: String) = viewModelScope.launch(Dispatchers.IO) {
         institutionActions.postValue(
-            if (type == HoverAction.P2P) actionRepo.getTransferActions(account.institutionId!!, account.countryAlpha2!!)
-            else actionRepo.getActions(account.institutionId!!, account.countryAlpha2!!, type)
+            if (type == HoverAction.P2P) actionRepo.getTransferActions(
+                account.institutionId,
+                account.countryAlpha2
+            )
+            else actionRepo.getActions(account.institutionId, account.countryAlpha2, type)
         )
     }
 
@@ -105,7 +108,7 @@ class AccountsViewModel(application: Application, val repo: AccountRepo, val act
         if (account?.countryAlpha2 == null || type.value.isNullOrEmpty()) return
         viewModelScope.launch(Dispatchers.IO) {
             bonusActions.postValue(
-                actionRepo.getBonusActionsByCountryAndType(account.countryAlpha2!!, type.value!!)
+                actionRepo.getBonusActionsByCountryAndType(account.countryAlpha2, type.value!!)
             )
         }
     }
